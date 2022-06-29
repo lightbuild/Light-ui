@@ -1,16 +1,14 @@
 <template>
-  <div>hi</div>
-  <light></light>
+  <div>导航栏| <router-link to="/">Light</router-link> |<router-link to="/xxx">Light2</router-link></div>
+  <hr/>
+  <router-view/>
 </template>
 
 <script>
-import light from './components/light.vue'
-
 
 export default {
   name: 'App',
   components: {
-    light
   }
 }
 </script>
