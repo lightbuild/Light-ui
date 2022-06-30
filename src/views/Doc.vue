@@ -20,7 +20,7 @@
               Dialog组件
             </router-link>
           </li>
-          <li>tabs
+          <li>
             <router-link to="/doc/tabs">
               Tabs组件
             </router-link>
