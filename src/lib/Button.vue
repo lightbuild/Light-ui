@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button v-bind="rest">
+    <button class="light-button" :class="`theme-${theme}`">
       <slot/>
     </button>
   </div>
@@ -8,10 +8,11 @@
 
 <script lang="ts">
   export default {
-    inheritAttrs: false,
-    setup(props, context) {
-      const {size, ...rest} = context.attrs;
-      return {size, rest};
+    props:{
+      theme:{
+        type: String,
+        default:'button',
+      }
     }
   };
 </script>
