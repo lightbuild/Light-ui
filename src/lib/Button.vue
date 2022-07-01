@@ -6,7 +6,7 @@
 
 <script lang="ts">
   import {computed} from 'vue';
-
+  
   export default {
     props: {
       theme: {
@@ -18,15 +18,15 @@
         default: 'normal'
       }
     },
-    setup(props){
-      const {theme,size} = props;
-       const classes= computed(()=>{
-         return {
-           [`light-theme-${theme}`]:theme,
-           [`light-size-${size}`]:size
-         }
-       })
-      return {classes}
+    setup(props) {
+      const {theme, size} = props;
+      const classes = computed(() => {
+        return {
+          [`light-theme-${theme}`]: theme,
+          [`light-size-${size}`]: size
+        };
+      });
+      return {classes};
     }
   };
 </script>
@@ -85,18 +85,17 @@
         background: darken(white, 5%);;
       }
     }
-    &.light-theme-button{
-      &.light-size-big{
-        font-size: 24px;
-        height: 48px;
-        padding: 0 16px
-      }
-      &.light-size-small{
-        font-size: 12px;
-        height: 20px;
-        padding: 0 4px;
-      }
+    
+    &.light-size-big {
+      font-size: 24px;
+      height: 48px;
+      padding: 0 16px
     }
     
+    &.light-size-small {
+      font-size: 12px;
+      height: 20px;
+      padding: 0 4px;
+    }
   }
 </style>
