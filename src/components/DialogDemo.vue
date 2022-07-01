@@ -2,7 +2,14 @@
   <div>Dialog</div>
   <h1>示例1</h1>
   <Button @click="toggle">toggle</Button>
-  <Dialog v-model:visible="visible" :close-onclick-overlay="false" :ok="f1" :cancel="f2"></Dialog>
+  <Dialog v-model:visible="visible" :close-onclick-overlay="false" :ok="f1" :cancel="f2" title="hahh">
+    <template v-slot:title><h1>标题1</h1></template>
+    <template v-slot:content>
+      <p>内容1</p>
+      <p>内容2</p>
+    </template>
+    <p>哈哈哈222</p>
+  </Dialog>
 </template>
 
 <script lang="ts">

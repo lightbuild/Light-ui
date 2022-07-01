@@ -1,19 +1,23 @@
 <template>
   <template v-if="visible">
-    <div class="light-dialog-overlay" @click="OnclickOverlay"></div>
-    <div class="light-dialog-wrapper">
-      <div class="light-dialog">
-        <header>标题 <span class="light-dialog-close" @click="close"></span></header>
-        <main>
-          <p>第一行字</p>
-          <p>第二行字</p>
-        </main>
-        <footer>
-          <Button @click="ok" level="main">Ok</Button>
-          <Button @click="cancel" level="main">Cancel</Button>
-        </footer>
+    <Teleport to="body">
+      <div class="light-dialog-overlay" @click="OnclickOverlay"></div>
+      <div class="light-dialog-wrapper">
+        <div class="light-dialog">
+          <header>
+            <slot name="title"/>
+            <span class="light-dialog-close" @click="close"></span>
+          </header>
+          <main>
+            <slot name="content"/>
+          </main>
+          <footer>
+            <Button @click="ok" level="main">Ok</Button>
+            <Button @click="cancel" level="main">Cancel</Button>
+          </footer>
+        </div>
       </div>
-    </div>
+    </Teleport>
   </template>
 </template>
 
@@ -30,11 +34,11 @@
         type: Boolean,
         default: true,
       },
-      ok:{
-        type:Function
+      ok: {
+        type: Function
       },
-      cancel:{
-        type:Function
+      cancel: {
+        type: Function
       }
       
     },
@@ -48,15 +52,15 @@
         }
       };
       const ok = () => {
-        if(props.ok?.() !== false){
-          close()
+        if (props.ok?.() !== false) {
+          close();
         }
-      }
+      };
       const cancel = () => {
-        context.emit('cancel')
-        close()
-      }
-      return {close, OnclickOverlay,ok,cancel};
+        context.emit('cancel');
+        close();
+      };
+      return {close, OnclickOverlay, ok, cancel};
     },
     components: {Button}
   };
