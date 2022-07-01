@@ -10,14 +10,20 @@
     </template>
     <p>哈哈哈222</p>
   </Dialog>
+  <div>
+    <h1>示例2</h1>
+    <Button @click="showDialog">show</Button>
+  </div>
 </template>
 
 <script lang="ts">
   import Dialog from '../lib/Dialog.vue';
   import Button from '../lib/Button.vue';
-  import {ref} from 'vue';
+  import {ref,h} from 'vue';
+  import {openDialog} from "../lib/openDialog"
   
   export default {
+    components: {Button, Dialog},
     setup() {
       const visible = ref(false);
       const toggle = () => {
@@ -30,9 +36,23 @@
       const f2 = () => {
         console.log(2);
       };
-      return {toggle, visible, f1, f2};
+      const showDialog = () => {
+        openDialog({
+          title: h('strong', {}, '标题'),
+          content: '你好',
+          closeOnclickOverlay:false,
+          ok() {
+            console.log('ok')
+            return false;
+          },
+          cancel() {
+            console.log('cancel')
+          }
+        })
+      }
+      return {toggle, visible, f1, f2,showDialog};
     },
-    components: {Button, Dialog}
+    
   };
 </script>
 
