@@ -2,7 +2,7 @@
   <div>Dialog</div>
   <h1>示例1</h1>
   <Button @click="toggle">toggle</Button>
-  <Dialog :visible="visible"></Dialog>
+  <Dialog v-model:visible="visible" :close-onclick-overlay="false" :ok="f1" :cancel="f2"></Dialog>
 </template>
 
 <script lang="ts">
@@ -11,12 +11,19 @@
   import {ref} from 'vue';
   
   export default {
-    setup(){
-      const visible =ref(false);
-      const toggle = ()=>{
+    setup() {
+      const visible = ref(false);
+      const toggle = () => {
         visible.value = !visible.value;
-      }
-      return{toggle,visible}
+      };
+      const f1 = () => {
+        console.log(1);
+        return false;
+      };
+      const f2 = () => {
+        console.log(2);
+      };
+      return {toggle, visible, f1, f2};
     },
     components: {Button, Dialog}
   };

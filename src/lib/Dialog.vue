@@ -1,16 +1,16 @@
 <template>
   <template v-if="visible">
-    <div class="light-dialog-overlay"></div>
+    <div class="light-dialog-overlay" @click="OnclickOverlay"></div>
     <div class="light-dialog-wrapper">
       <div class="light-dialog">
-        <header>标题 <span class="light-dialog-close"></span></header>
+        <header>标题 <span class="light-dialog-close" @click="close"></span></header>
         <main>
           <p>第一行字</p>
           <p>第二行字</p>
         </main>
         <footer>
-          <Button level="main">Ok</Button>
-          <Button>Cancel</Button>
+          <Button @click="ok" level="main">Ok</Button>
+          <Button @click="cancel" level="main">Cancel</Button>
         </footer>
       </div>
     </div>
@@ -25,7 +25,38 @@
       visible: {
         type: Boolean,
         default: false,
+      },
+      closeOnclickOverlay: {
+        type: Boolean,
+        default: true,
+      },
+      ok:{
+        type:Function
+      },
+      cancel:{
+        type:Function
       }
+      
+    },
+    setup(props, context) {
+      const close = () => {
+        context.emit('update:visible', false);
+      };
+      const OnclickOverlay = () => {
+        if (props.closeOnclickOverlay) {
+          close();
+        }
+      };
+      const ok = () => {
+        if(props.ok?.() !== false){
+          close()
+        }
+      }
+      const cancel = () => {
+        context.emit('cancel')
+        close()
+      }
+      return {close, OnclickOverlay,ok,cancel};
     },
     components: {Button}
   };
