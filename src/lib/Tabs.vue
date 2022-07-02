@@ -1,10 +1,12 @@
 <template>
   <div class="light-tabs">
-    <div class="light-tabs-nav">
+    <div class="light-tabs-nav" ref="container">
       <div class="light-tabs-nav-item" :class="{selected:title === selected}" @click="select(title)"
            v-for="(title,index) in titles"
+           :ref="el => { if (el) navItems[index] = el }"
            :key="index">{{ title }}
       </div>
+      <div class="light-tabs-nav-indicator" ref="indicator"></div>
     </div>
     <div class="light-tabs-content">
       <component class="light-tabs-content-item" :is="current" :key="current.props.title"/>
@@ -14,7 +16,7 @@
 
 <script lang="ts">
   import Tab from './Tab.vue';
-  import {computed} from 'vue';
+  import {computed, ref, onMounted, onUpdated} from 'vue';
   
   export default {
     props: {
@@ -23,7 +25,22 @@
       }
     },
     setup(props, context) {
+      const navItems = ref<HTMLDivElement[]>([]);
+      const indicator = ref<HTMLDivElement>(null);
+      const container = ref<HTMLDivElement>(null);
       const defaults = context.slots.default();
+      const x = () => {
+        const divs = navItems.value;
+        const result = divs.find(div => div.classList.contains('selected'));
+        const {width} = result.getBoundingClientRect();
+        indicator.value.style.width = width + 'px';
+        const {left: left1} = container.value.getBoundingClientRect();
+        const {left: left2} = result.getBoundingClientRect();
+        const left = left2 - left1;
+        indicator.value.style.left = left + 'px';
+      };
+      onMounted(x);
+      onUpdated(x);
       defaults.forEach((tab) => {
         if (tab.type !== Tab) {
           throw new Error('Tabs 的子标签必须是 Tab');
@@ -36,7 +53,7 @@
         return defaults.find((tab) => tab.props.title === props.selected);
       });
       const titles = defaults.map(tab => tab.props.title);
-      return {defaults, titles, current, select};
+      return {defaults, titles, current, select, navItems, indicator, container};
     }
   };
 </script>
@@ -50,6 +67,7 @@
       display: flex;
       color: $color;
       border-bottom: 1px solid $border-color;
+      position: relative;
       
       &-item {
         padding: 8px 0;
@@ -63,6 +81,16 @@
         &.selected {
           color: $blue;
         }
+      }
+      
+      &-indicator {
+        position: absolute;
+        height: 3px;
+        background: $blue;
+        left: 0;
+        bottom: -1px;
+        width: 100px;
+        transition: all 250ms;
       }
     }
     
