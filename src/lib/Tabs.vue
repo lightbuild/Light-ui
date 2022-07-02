@@ -3,7 +3,7 @@
     <div class="light-tabs-nav" ref="container">
       <div class="light-tabs-nav-item" :class="{selected:title === selected}" @click="select(title)"
            v-for="(title,index) in titles"
-           :ref="el => { if (el) navItems[index] = el }"
+           :ref="el => { if (title === selected) selectedItem = el }"
            :key="index">{{ title }}
       </div>
       <div class="light-tabs-nav-indicator" ref="indicator"></div>
@@ -16,7 +16,7 @@
 
 <script lang="ts">
   import Tab from './Tab.vue';
-  import {computed, ref, onMounted, onUpdated} from 'vue';
+  import {computed, ref, onMounted,watchEffect} from 'vue';
   
   export default {
     props: {
@@ -25,22 +25,20 @@
       }
     },
     setup(props, context) {
-      const navItems = ref<HTMLDivElement[]>([]);
+      const selectedItem = ref<HTMLDivElement>(null);
       const indicator = ref<HTMLDivElement>(null);
       const container = ref<HTMLDivElement>(null);
       const defaults = context.slots.default();
-      const x = () => {
-        const divs = navItems.value;
-        const result = divs.find(div => div.classList.contains('selected'));
-        const {width} = result.getBoundingClientRect();
-        indicator.value.style.width = width + 'px';
-        const {left: left1} = container.value.getBoundingClientRect();
-        const {left: left2} = result.getBoundingClientRect();
-        const left = left2 - left1;
-        indicator.value.style.left = left + 'px';
-      };
-      onMounted(x);
-      onUpdated(x);
+      onMounted(()=>{
+        watchEffect(() => {
+          const {width} = selectedItem.value.getBoundingClientRect();
+          indicator.value.style.width = width + 'px';
+          const {left: left1} = container.value.getBoundingClientRect();
+          const {left: left2} = selectedItem.value.getBoundingClientRect();
+          const left = left2 - left1;
+          indicator.value.style.left = left + 'px';
+        })
+      });
       defaults.forEach((tab) => {
         if (tab.type !== Tab) {
           throw new Error('Tabs 的子标签必须是 Tab');
@@ -53,7 +51,7 @@
         return defaults.find((tab) => tab.props.title === props.selected);
       });
       const titles = defaults.map(tab => tab.props.title);
-      return {defaults, titles, current, select, navItems, indicator, container};
+      return {defaults, titles, current, select, selectedItem, indicator, container};
     }
   };
 </script>
